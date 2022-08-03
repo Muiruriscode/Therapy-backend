@@ -5,53 +5,51 @@ const { NotFoundError } = require('../errors')
 //get single user
 const getAllUsers = async (req, res) => {
   const query = req.query.new
-  try {
-    const users = query
-      ? await User.find().sort({ _id: -1 }).limit(2)
-      : await User.find()
-    res.status(StatusCodes.OK).json(users)
-  } catch (error) {
+
+  const users = query
+    ? await User.find().sort({ _id: -1 }).limit(2)
+    : await User.find()
+  if (!users) {
     throw new NotFoundError('No such Users')
   }
+  res.status(StatusCodes.OK).json(users)
 }
 
 //get all users
 const getSingleUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id)
-    const { password, ...userDetails } = user._doc
-    return res.status(StatusCodes.OK).json(userDetails)
-  } catch (err) {
-    throw new NotFoundError('No Users')
+  const user = await User.findById(req.params.id)
+  if (!user) {
+    throw new NotFoundError('No such User')
   }
+  const { password, ...userDetails } = user._doc
+  res.status(StatusCodes.OK).json(userDetails)
 }
 
 //update user
 const updateUser = async (req, res) => {
   //password update
-
-  try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      { new: true, runValidators: true }
-    )
-    return res.status(StatusCodes.OK).json(updatedUser)
-  } catch (error) {
-    throw new NotFoundError(error)
+  const updatedUser = await User.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: req.body,
+    },
+    { new: true, runValidators: true }
+  )
+  if (!updatedUser) {
+    throw new NotFoundError('User not found')
   }
+  return res.status(StatusCodes.OK).json(updatedUser)
 }
 
 // delete user
 const deleteUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id)
-    res.status(200).json({ msg: `User ${user.username} has been deleted` })
-  } catch (error) {
-    throw new NotFoundError(error)
+  const user = await User.findByIdAndDelete(req.params.id)
+
+  if (!user) {
+    throw new NotFoundError('No such User')
   }
+
+  res.status(200).json({ msg: `User ${user.username} has been deleted` })
 }
 
 module.exports = {

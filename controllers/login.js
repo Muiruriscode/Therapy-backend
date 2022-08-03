@@ -16,8 +16,6 @@ const login = async (req, res) => {
   }
 
   const user = await User.findOne({ email })
-  console.log('----------------------------------------')
-  console.log('login', user)
   console.log(user.password)
 
   if (!user) {
@@ -25,7 +23,6 @@ const login = async (req, res) => {
   }
 
   const isPasswordCorrect = await bcrypt.compare(password, user.password)
-  console.log(isPasswordCorrect)
 
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError('Invalid credentials')

@@ -16,13 +16,8 @@ const getAllMessages = async (req, res) => {
 // create message
 const createMessage = async (req, res) => {
   const newMessage = new Message(req.body)
-
-  try {
-    const message = await newMessage.save()
-    res.status(StatusCodes.CREATED).json(message)
-  } catch (error) {
-    throw new BadRequestError(error.message)
-  }
+  const message = await newMessage.save()
+  res.status(StatusCodes.CREATED).json(message)
 }
 
 // get message
@@ -37,13 +32,9 @@ const getSingleMessage = async (req, res) => {
 
 // deleteMessage
 const deleteMessage = async (req, res) => {
-  try {
-    const { id } = req.params
-    await Message.findByIdAndDelete(id)
-    res.status(StatusCodes.OK).json('Message deleted')
-  } catch (error) {
-    throw new BadRequestError('Could not delete')
-  }
+  const { id } = req.params
+  await Message.findByIdAndDelete(id)
+  res.status(StatusCodes.OK).json('Message deleted')
 }
 
 // update essage

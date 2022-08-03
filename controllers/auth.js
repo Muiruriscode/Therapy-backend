@@ -2,6 +2,7 @@ const User = require('../models/user')
 const crypto = require('crypto')
 const { StatusCodes } = require('http-status-codes')
 const bcrypt = require('bcryptjs')
+const origin = require('../config')
 
 const sendVerificationEmail = require('../utils/sendVerificationEmail')
 const sendResetPasswordEmail = require('../utils/sendResetPasswordEmail')
@@ -14,22 +15,25 @@ const {
 
 const login = async (req, res) => {
   const { password, email } = req.body
+  console.log(password)
   if (!email || !password) {
     return BadRequestError('Please provide email and password')
   }
 
   const user = await User.findOne({ email })
+  console.log(user.password)
 
   if (!user) {
     return UnauthenticatedError('Invalid credentials')
   }
-  const isPasswordCorrect = await user.comparePassword(password)
+
+  const isPasswordCorrect = await bcrypt.compare(password, user.password)
 
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError('Invalid credentials')
   }
   if (!user.isVerified) {
-    throw new CustomAPIError.UnauthenticatedError('Please verify your email')
+    throw new UnauthenticatedError('Please verify your email')
   }
   const token = user.createJWT()
 
@@ -62,9 +66,6 @@ const register = async (req, res) => {
     verificationToken,
   })
 
-  console.log(user)
-  const origin = 'http://localhost:3000'
-
   await sendVerificationEmail({
     username: user.username,
     email: user.email,
@@ -89,14 +90,10 @@ const verifyEmail = async (req, res) => {
   if (user.verificationToken !== verificationToken) {
     throw new UnauthenticatedError('Verification Failed')
   }
-  console.log('----------------------------------------')
-  console.log('verify', user)
 
   user.isVerified = true
   user.verified = Date.now()
   user.verificationToken = ''
-  console.log('----------------------------------------')
-  console.log('verify2', user)
 
   const newUser = await user.save()
 
@@ -105,7 +102,6 @@ const verifyEmail = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body
-  console.log(email)
 
   if (!email) {
     throw new BadRequestError('Please provide valid email')
@@ -115,7 +111,6 @@ const forgotPassword = async (req, res) => {
   if (user) {
     const passwordToken = crypto.randomBytes(70).toString('hex')
 
-    const origin = 'http://localhost:3000'
     await sendResetPasswordEmail({
       username: user.username,
       email: user.email,
@@ -126,7 +121,6 @@ const forgotPassword = async (req, res) => {
     const tenMinutes = 1000 * 60 * 10
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes)
 
-    console.log(passwordTokenExpirationDate)
     user.passwordToken = crypto
       .createHash('md5')
       .update(passwordToken)
@@ -140,7 +134,6 @@ const forgotPassword = async (req, res) => {
 }
 const resetPassword = async (req, res) => {
   const { token, email, password } = req.body
-  console.log(email)
   if (!token || !email || !password) {
     throw new BadRequestError('Please provide all values')
   }

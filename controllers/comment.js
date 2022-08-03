@@ -1,10 +1,6 @@
 const { StatusCodes } = require('http-status-codes')
 const Comment = require('../models/comment')
-const {
-  NotFoundError,
-  BadRequestError,
-  UnauthenticatedError,
-} = require('../errors')
+const { UnauthenticatedError } = require('../errors')
 
 //get all comments
 const getAllComments = async (req, res) => {
@@ -28,7 +24,7 @@ const getSingleComment = async (req, res) => {
 // create commnet
 const createComment = async (req, res) => {
   const { author, comment, email } = req.body
-  const createdComment = await Comment.create({
+  await Comment.create({
     author,
     comment,
     email,

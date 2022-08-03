@@ -43,7 +43,7 @@ const deleteConsultation = async (req, res) => {
 
 // create consultation
 const createConsultation = async (req, res) => {
-  const createdConsultaion = await Consult.create(req.body)
+  await Consult.create(req.body)
   res
     .status(StatusCodes.CREATED)
     .json({ msg: 'your consultation detatils have been saved' })

@@ -56,13 +56,9 @@ const deleteConversation = async (req, res) => {
 
 // create conversation
 const createConversation = async (req, res) => {
-  try {
-    const newConversation = new Conversation(req.body)
-    const createdConversation = await newConversation.save()
-    res.status(StatusCodes.CREATED).json(createdConversation)
-  } catch (error) {
-    console.log('err', error)
-  }
+  const newConversation = new Conversation(req.body)
+  const createdConversation = await newConversation.save()
+  res.status(StatusCodes.CREATED).json(createdConversation)
 }
 
 module.exports = {

@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization
-  console.log(authHeader)
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw new UnauthenticatedError('No token provided')
@@ -23,17 +22,12 @@ const authMiddleware = async (req, res, next) => {
 }
 
 const verifyUser = (req, res, next) => {
-  try {
-    authMiddleware(req, res, () => {
-      if (req.user.id === req.params.id || req.user.isAdmin) {
-        next()
-      } else {
-        throw new UnauthenticatedError('Unauthenticated')
-      }
-    })
-  } catch (error) {
-    console.log(error.message)
-  }
+  authMiddleware(req, res, () => {
+    if (req.user.id === req.params.id || req.user.isAdmin) {
+      next()
+    }
+    throw new UnauthenticatedError('Unauthenticated')
+  })
 }
 
 const verifyTokenandAdmin = (req, res, next) => {

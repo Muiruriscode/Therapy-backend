@@ -11,7 +11,7 @@ const CommentSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: [true, 'please add a comment'],
+    required: [true, 'please add you email'],
   },
 })
 
