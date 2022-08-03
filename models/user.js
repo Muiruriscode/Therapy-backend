@@ -22,14 +22,26 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    verificationToken: String,
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verified: Date,
+    passwordToken: {
+      type: String,
+    },
+    passwordTokenExpirationDate: {
+      type: Date,
+    },
   },
   { timestamps: true }
 )
 
-UserSchema.pre('save', async function () {
-  const salt = await bcrypt.genSalt(10)
-  this.password = await bcrypt.hash(this.password, salt)
-})
+// UserSchema.pre('save', async function () {
+//   const salt = await bcrypt.genSalt(10)
+//   this.password = await bcrypt.hash(this.password, salt)
+// })
 
 UserSchema.methods.createJWT = function () {
   return jwt.sign(

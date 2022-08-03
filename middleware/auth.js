@@ -3,24 +3,23 @@ const jwt = require('jsonwebtoken')
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization
+  console.log(authHeader)
 
-  if (!authHeader || !authHeader.startsWith('Bearer')) {
-    throw new BadRequestError('Invalid token')
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    throw new UnauthenticatedError('No token provided')
   }
+
   const token = authHeader.split(' ')[1]
 
-  try {
-    const payload = jwt.verify(token, process.env.JWT_TOKEN)
-    req.user = {
-      id: payload.id,
-      username: payload.username,
-      email: payload.email,
-      isAdmin: payload.isAdmin,
-    }
-    next()
-  } catch (error) {
-    throw new UnauthenticatedError(error)
+  const payload = jwt.verify(token, process.env.JWT_TOKEN)
+  if (!payload) throw new UnauthenticatedError('Invalid token')
+  req.user = {
+    id: payload.id,
+    username: payload.username,
+    email: payload.email,
+    isAdmin: payload.isAdmin,
   }
+  next()
 }
 
 const verifyUser = (req, res, next) => {
@@ -33,7 +32,7 @@ const verifyUser = (req, res, next) => {
       }
     })
   } catch (error) {
-    console.log(error)
+    console.log(error.message)
   }
 }
 

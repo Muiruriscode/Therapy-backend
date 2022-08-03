@@ -11,7 +11,7 @@ const {
 const { verifyUser, verifyTokenandAdmin } = require('../middleware/auth')
 
 router.post('/:id', verifyUser, createMessage)
-router.get('/:id', verifyTokenandAdmin, getAllMessages)
+router.get('/:id', verifyUser, getAllMessages)
 router.patch('/:id', verifyTokenandAdmin, updateMessage)
 router.delete('/:id', verifyTokenandAdmin, deleteMessage)
 

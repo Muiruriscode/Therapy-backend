@@ -51,7 +51,7 @@ const deleteReview = async (req, res) => {
 const createReview = async (req, res) => {
   const newReview = new Review({ ...req.body })
   const createdReview = await newReview.save()
-  res.status(StatusCodes.CREATED).send(createdReview)
+  res.status(StatusCodes.CREATED).json({ msg: 'Review sent' })
 }
 
 module.exports = {

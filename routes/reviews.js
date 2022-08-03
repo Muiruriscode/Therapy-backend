@@ -11,7 +11,7 @@ const {
 
 const { verifyUser, verifyTokenandAdmin } = require('../middleware/auth')
 
-router.post('/', verifyUser, createReview)
+router.post('/:id', verifyUser, createReview)
 router.get('/:id', verifyUser, getSingleReview)
 router.get('/', getLatestReview)
 router.delete('/:id', verifyUser, deleteReview)

@@ -21,7 +21,7 @@ const createMessage = async (req, res) => {
     const message = await newMessage.save()
     res.status(StatusCodes.CREATED).json(message)
   } catch (error) {
-    throw new BadRequestError('Bad request')
+    throw new BadRequestError(error.message)
   }
 }
 
