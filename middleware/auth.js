@@ -26,7 +26,7 @@ const verifyUser = (req, res, next) => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
       next()
     }
-    throw new UnauthenticatedError('Unauthenticated')
+    res.status(401).json({msg: "Unauthenticated"})
   })
 }
 
@@ -35,7 +35,7 @@ const verifyTokenandAdmin = (req, res, next) => {
     if (req.user.isAdmin) {
       next()
     } else {
-      throw new UnauthenticatedError('You are not authorized')
+      res.status(401).json({msg: "Unauthenticated"})
     }
   })
 }

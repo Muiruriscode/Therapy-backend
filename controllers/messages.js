@@ -5,8 +5,8 @@ const { StatusCodes } = require('http-status-codes')
 //get all messages
 const getAllMessages = async (req, res) => {
   const { id } = req.params
-  console.log(req.user)
-  const messages = await Message.find({ roomId: id })
+  const queryNew = req.query.new
+  const messages = queryNew ?  await Message.find({ roomId: id }).sort({ _id: -1 }).limit(5) : await Message.find({ roomId: id })
   if (!messages) {
     throw new NotFoundError('No Messages')
   }

@@ -4,7 +4,9 @@ const { UnauthenticatedError } = require('../errors')
 
 //get all comments
 const getAllComments = async (req, res) => {
-  const comments = await Comment.find()
+  const queryNew = req.query.new
+
+  const comments = queryNew ? await Comment.find().sort({ _id: -1 }).limit(5): await Comment.find()
   if (!comments) {
     throw new UnauthenticatedError('This is an error')
   }

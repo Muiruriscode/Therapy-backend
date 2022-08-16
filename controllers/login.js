@@ -38,6 +38,7 @@ const login = async (req, res) => {
     token,
     email: user.email,
     isAdmin: user.isAdmin,
+    msg: 'Login successful',
   })
 }
 
