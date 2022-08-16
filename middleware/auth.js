@@ -5,13 +5,13 @@ const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new UnauthenticatedError('No token provided')
+    res.status(401).json({ msg: 'Invalid Token' })
   }
 
   const token = authHeader.split(' ')[1]
 
   const payload = jwt.verify(token, process.env.JWT_TOKEN)
-  if (!payload) throw new UnauthenticatedError('Invalid token')
+  if (!payload) res.status(401).json({ msg: 'Invalid Token' })
   req.user = {
     id: payload.id,
     username: payload.username,
@@ -26,7 +26,7 @@ const verifyUser = (req, res, next) => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
       next()
     }
-    res.status(401).json({msg: "Unauthenticated"})
+    res.status(401).json({ msg: 'Unauthenticated' })
   })
 }
 
@@ -35,7 +35,7 @@ const verifyTokenandAdmin = (req, res, next) => {
     if (req.user.isAdmin) {
       next()
     } else {
-      res.status(401).json({msg: "Unauthenticated"})
+      res.status(401).json({ msg: 'Unauthenticated' })
     }
   })
 }
