@@ -5,7 +5,9 @@ const { NotFoundError, BadRequestError } = require('../errors')
 //get all consultations
 const getAllConsultations = async (req, res) => {
   const queryNew = req.query.new
-  const consultations = queryNew ? await Consult.find().sort({ _id: -1 }).limit(5) : await Consult.find()
+  const consultations = queryNew
+    ? await Consult.find().sort('createdAt').limit(5)
+    : await Consult.find()
   res.status(StatusCodes.OK).json(consultations)
 }
 

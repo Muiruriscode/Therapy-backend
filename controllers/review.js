@@ -4,7 +4,7 @@ const Review = require('../models/review')
 
 //get first five review
 const getLatestReview = async (req, res) => {
-  const reviews = await Review.find().sort({ _id: -1 })).limit(5)
+  const reviews = await Review.find().sort({ _id: -1 }).limit(5)
 
   if (!reviews) {
     throw new NotFoundError('No reviews')
