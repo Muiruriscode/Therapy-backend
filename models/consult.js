@@ -5,14 +5,18 @@ const ConsultSchema = new mongoose.Schema({
     type: String,
     default: 'individual',
   },
+  client: {
+    type: String,
+    required: true,
+  },
   help: {
     type: Array,
     default: [],
   },
   gender: {
     type: String,
-    enum: ['male', 'female'],
-    default: 'male',
+    enum: ['male', 'female', 'unanswered'],
+    default: 'unanswered',
   },
   date: {
     type: String,

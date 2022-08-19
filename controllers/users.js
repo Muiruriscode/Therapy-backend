@@ -7,7 +7,7 @@ const getAllUsers = async (req, res) => {
   const query = req.query.new
 
   const users = query
-    ? await User.find().sort({ _id: -1 }).limit(2)
+    ? await User.find().sort({ _id: -1 }).limit(5)
     : await User.find()
   if (!users) {
     throw new NotFoundError('No such Users')

@@ -10,8 +10,8 @@ const {
   createComment,
 } = require('../controllers/comment')
 
-router.get('/:id', getAllComments)
-router.get('/', verifyTokenandAdmin, getSingleComment)
+router.get('/:id', getSingleComment)
+router.get('/', verifyTokenandAdmin, getAllComments)
 router.delete('/:id', verifyTokenandAdmin, deleteComment)
 router.post('/', createComment)
 

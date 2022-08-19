@@ -5,13 +5,15 @@ const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({ msg: 'Invalid Token' })
+    return res.status(401).json({ msg: 'Invalid Token' })
   }
 
   const token = authHeader.split(' ')[1]
 
   const payload = jwt.verify(token, process.env.JWT_TOKEN)
-  if (!payload) res.status(401).json({ msg: 'Invalid Token' })
+  if (!payload) {
+    return res.status(401).json({ msg: 'Invalid Token' })
+  }
   req.user = {
     id: payload.id,
     username: payload.username,
